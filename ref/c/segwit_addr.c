@@ -1,3 +1,23 @@
+/* Copyright (c) 2017 Pieter Wuille
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
@@ -97,13 +117,10 @@ int bech32_decode(char* hrp, uint8_t *data, size_t *data_len, const char *input)
     }
     ++i;
     while (i < input_len) {
-        int v = (input[i] & 0x80) ? -2 : charset_rev[(int)input[i]];
+        int v = (input[i] & 0x80) ? -1 : charset_rev[(int)input[i]];
         if (input[i] >= 'a' && input[i] <= 'z') have_lower = 1;
         if (input[i] >= 'A' && input[i] <= 'Z') have_upper = 1;
         if (v == -1) {
-            return 0;
-        }
-        if (v == -2) {
             return 0;
         }
         chk = bech32_polymod_step(chk) ^ v;
@@ -140,7 +157,7 @@ static int convert_bits(uint8_t* out, size_t* outlen, int outbits, const uint8_t
     return 1;
 }
 
-int segwit_addr_encode(char *output, const char *hrp, uint8_t witver, const uint8_t *witprog, size_t witprog_len) {
+int segwit_addr_encode(char *output, const char *hrp, int witver, const uint8_t *witprog, size_t witprog_len) {
     uint8_t data[65];
     size_t datalen = 0;
     if (witver > 16) return 0;

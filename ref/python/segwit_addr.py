@@ -1,3 +1,23 @@
+# Copyright (c) 2017 Pieter Wuille
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+
 """Reference implementation for Bech32 and segwit addresses."""
 
 
@@ -44,7 +64,7 @@ def bech32_decode(bech):
     if ((any(ord(x) < 33 or ord(x) > 126 for x in bech)) or
             (bech.lower() != bech and bech.upper() != bech)):
         return (None, None)
-    bech = bech.lower();
+    bech = bech.lower()
     pos = bech.rfind('1')
     if pos < 1 or pos + 7 > len(bech) or len(bech) > 90:
         return (None, None)
@@ -82,7 +102,7 @@ def convertbits(data, frombits, tobits, pad=True):
 def decode(hrp, addr):
     """Decode a segwit address."""
     hrpgot, data = bech32_decode(addr)
-    if (hrpgot != hrp):
+    if hrpgot != hrp:
         return (None, None)
     decoded = convertbits(data[1:], 5, 8, False)
     if decoded is None or len(decoded) < 2 or len(decoded) > 40:
